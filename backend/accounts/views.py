@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import RegisterSerializer, UserSerializer
 
+
 class RegisterView(CreateAPIView):
     serializer_class = RegisterSerializer
     permission_classes = [AllowAny]
@@ -12,6 +13,6 @@ class RegisterView(CreateAPIView):
 class MeView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self,request):
+    def get(self, request):
         serializer = UserSerializer(request.user)
         return Response(serializer.data)

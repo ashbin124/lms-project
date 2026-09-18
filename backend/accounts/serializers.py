@@ -1,5 +1,8 @@
+from django.db import transaction
 from rest_framework import serializers
-from .models import User , StudentProfile
+
+from .models import StudentProfile, User
+
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -10,9 +13,14 @@ class RegisterSerializer(serializers.ModelSerializer):
             "email",
             "first_name",
             "last_name",
-            "password"
+            "password",
         ]
+        extra_kwargs = {
+            "first_name": {"required": True, "allow_blank": False},
+            "last_name": {"required": True, "allow_blank": False},
+        }
 
+    @transaction.atomic
     def create(self, validated_data):
         user = User.objects.create_user(
             email=validated_data["email"],
