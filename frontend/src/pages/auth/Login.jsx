@@ -1,8 +1,8 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import AuthContext from "../context/AuthContext";
-import { getCurrentUser, loginUser } from "../services/authService";
+import AuthContext from "../../context/AuthContext";
+import { getCurrentUser, loginUser } from "../../services/authService";
 
 
 function Login() {
