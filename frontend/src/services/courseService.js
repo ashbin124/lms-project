@@ -63,3 +63,14 @@ export const getPublicCourse = async (courseId) => {
 
   return response.data;
 };
+export const enrollInCourse = async (courseId) => {
+  const response = await api.post("enrollments/", {
+    course: courseId,
+  });
+  return response.data;
+};
+
+export const getMyEnrollments = async () => {
+  const response = await api.get("enrollments/");
+  return response.data;
+};

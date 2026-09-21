@@ -2,9 +2,9 @@ from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
-from accounts.permissions import IsInstructor, IsAdmin
-from .models import Course, CourseCategory
-from .serializers import CourseSerializer, CourseCategorySerializer
+from accounts.permissions import IsInstructor, IsAdmin, IsStudent
+from .models import Course, CourseCategory, Enrollment
+from .serializers import CourseSerializer, CourseCategorySerializer, EnrollmentSerializer
 
 
 class CourseViewSet(ModelViewSet):
@@ -60,3 +60,18 @@ class CourseCategoryViewSet(ReadOnlyModelViewSet):
     queryset = CourseCategory.objects.all()
     serializer_class = CourseCategorySerializer
     permission_classes = [AllowAny]
+
+
+class EnrollmentViewSet(ModelViewSet):
+    serializer_class = EnrollmentSerializer
+    permission_classes = [IsStudent]
+
+    def get_queryset(self):
+        return Enrollment.objects.filter(
+            student=self.request.user
+        )
+
+    def perform_create(self, serializer):
+        serializer.save(
+            student=self.request.user
+        )

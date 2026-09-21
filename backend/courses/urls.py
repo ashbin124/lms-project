@@ -1,6 +1,6 @@
 from rest_framework.routers import DefaultRouter
 
-from .views import CourseViewSet, AdminCourseViewSet, PublicCourseViewSet, CourseCategoryViewSet
+from .views import CourseViewSet, AdminCourseViewSet, PublicCourseViewSet, CourseCategoryViewSet, EnrollmentViewSet
 
 
 router = DefaultRouter()
@@ -27,6 +27,12 @@ router.register(
     "categories",
     CourseCategoryViewSet,
     basename="category",
+)
+
+router.register(
+    "enrollments",
+    EnrollmentViewSet,
+    basename="enrollment",
 )
 
 urlpatterns = router.urls
