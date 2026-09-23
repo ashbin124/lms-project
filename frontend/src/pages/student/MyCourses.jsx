@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getMyEnrollments } from "../../services/courseService";
+import { Link } from "react-router-dom";
 
 function MyCourses() {
   const [enrollments, setEnrollments] = useState([]);
@@ -40,6 +41,9 @@ function MyCourses() {
           <div key={enrollment.id}>
             <h2>{enrollment.course_title}</h2>
             <p>Enrolled: {enrollment.enrolled_at}</p>
+            <Link to={`/student/courses/${enrollment.course}/learn`}>
+              Start Learning
+            </Link>
           </div>
         ))
       )}

@@ -71,7 +71,13 @@ function InstructorCourses() {
 
               <p>Status: {course.status}</p>
 
-              <Link to={`/instructor/courses/${course.id}/edit`}>Edit course</Link>
+              <Link to={`/instructor/courses/${course.id}/edit`}>
+                Edit course
+              </Link>
+
+              <Link to={`/instructor/courses/${course.id}/lessons`}>
+                Manage Content
+              </Link>
               <button onClick={() => handleDelete(course.id)}>
                 Delete Course
               </button>

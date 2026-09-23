@@ -74,3 +74,53 @@ export const getMyEnrollments = async () => {
   const response = await api.get("enrollments/");
   return response.data;
 };
+
+export const getInstructorLessons = async () => {
+  const response = await api.get("lessons/");
+  return response.data;
+};
+
+export const createLesson = async (lessonData) => {
+  const response = await api.post(
+    "lessons/",
+    lessonData
+  );
+
+  return response.data;
+};
+
+export const updateLesson = async (lessonId, lessonData) => {
+  const response = await api.patch(
+    `lessons/${lessonId}/`,
+    lessonData
+  );
+
+  return response.data;
+};
+
+export const deleteLesson = async (lessonId) => {
+  await api.delete(`lessons/${lessonId}/`);
+};
+
+export const getStudyMaterials = async () => {
+  const response = await api.get("study-materials/");
+  return response.data;
+};
+
+export const createStudyMaterial = async (materialData) => {
+  const response = await api.post(
+    "study-materials/",
+    materialData
+  );
+
+  return response.data;
+};
+
+export const deleteStudyMaterial = async (materialId) => {
+  await api.delete(`study-materials/${materialId}/`);
+};
+
+export const getStudentLessons = async () => {
+  const response = await api.get("student/lessons/");
+  return response.data;
+};
