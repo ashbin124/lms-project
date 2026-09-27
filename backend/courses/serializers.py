@@ -1,6 +1,13 @@
 from rest_framework import serializers
 
-from .models import Course, CourseCategory, Enrollment, Lesson, StudyMaterial
+from .models import (
+    Course,
+    CourseCategory,
+    Enrollment,
+    Lesson,
+    StudyMaterial,
+    LessonProgress,
+)
 
 
 class CourseCategorySerializer(serializers.ModelSerializer):
@@ -57,6 +64,10 @@ class EnrollmentSerializer(serializers.ModelSerializer):
         read_only=True,
     )
 
+    progress_percentage = serializers.SerializerMethodField()
+    completed_lessons = serializers.SerializerMethodField()
+    total_lessons = serializers.SerializerMethodField()
+
     class Meta:
         model = Enrollment
         fields = [
@@ -65,12 +76,18 @@ class EnrollmentSerializer(serializers.ModelSerializer):
             "course",
             "course_title",
             "enrolled_at",
+            "progress_percentage",
+            "completed_lessons",
+            "total_lessons",
         ]
 
         read_only_fields = [
             "student_email",
             "course_title",
             "enrolled_at",
+            "progress_percentage",
+            "completed_lessons",
+            "total_lessons",
         ]
 
     def validate_course(self, course):
@@ -98,6 +115,29 @@ class EnrollmentSerializer(serializers.ModelSerializer):
             )
 
         return attrs
+
+    def get_total_lessons(self, obj):
+        return Lesson.objects.filter(
+            course=obj.course
+        ).count()
+
+    def get_completed_lessons(self, obj):
+        return LessonProgress.objects.filter(
+            student=obj.student,
+            lesson__course=obj.course,
+        ).count()
+
+    def get_progress_percentage(self, obj):
+        total_lessons = self.get_total_lessons(obj)
+
+        if total_lessons == 0:
+            return 0
+
+        completed_lessons = self.get_completed_lessons(obj)
+
+        return round(
+            (completed_lessons / total_lessons) * 100
+        )
 
 
 class LessonSerializer(serializers.ModelSerializer):
@@ -222,3 +262,35 @@ class StudentLessonSerializer(serializers.ModelSerializer):
         ]
 
         read_only_fields = fields
+
+
+class LessonProgressSerializer(serializers.ModelSerializer):
+    lesson_title = serializers.CharField(
+        source="lesson.title",
+        read_only=True,
+    )
+
+    course = serializers.IntegerField(
+        source="lesson.course.id",
+        read_only=True,
+    )
+
+    course_title = serializers.CharField(
+        source="lesson.course.title",
+        read_only=True,
+    )
+
+    class Meta:
+        model = LessonProgress
+        fields = [
+            "id",
+            "lesson",
+            "lesson_title",
+            "course",
+            "course_title",
+            "completed_at",
+        ]
+
+        read_only_fields = [
+            "completed_at",
+        ]

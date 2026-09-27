@@ -1,35 +1,68 @@
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import { Routes, Route } from "react-router-dom";
+
 import StudentDashboard from "./pages/student/StudentDashboard";
 import InstructorDashboard from "./pages/instructor/InstructorDashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+
 import InstructorCourses from "./pages/instructor/InstructorCourses";
 import CreateCourse from "./pages/instructor/CreateCourse";
 import EditCourse from "./pages/instructor/EditCourse";
+
 import AdminCourses from "./pages/admin/AdminCourses";
+
 import Courses from "./pages/student/Courses";
 import CourseDetails from "./pages/student/CourseDetails";
 import MyCourses from "./pages/student/MyCourses";
+
 import ManageLessons from "./pages/instructor/ManageLessons";
 import CreateLesson from "./pages/instructor/CreateLesson";
 import EditLesson from "./pages/instructor/EditLesson";
 import AddMaterial from "./pages/instructor/AddMaterial";
+
 import Learning from "./pages/student/Learning";
+
 import ManageAssignments from "./pages/instructor/ManageAssignments";
 import CreateAssignment from "./pages/instructor/CreateAssignment";
 import EditAssignment from "./pages/instructor/EditAssignment";
 import AssignmentSubmissions from "./pages/instructor/AssignmentSubmissions";
+
 import Assignments from "./pages/student/Assignments";
+
+import InstructorProgress from "./pages/instructor/InstructorProgress";
+
 import ProtectedRoute from "./components/ProtectedRoute";
+
 
 function App() {
   return (
     <Routes>
-      <Route path="/courses" element={<Courses />} />
-      <Route path="/courses/:courseId" element={<CourseDetails />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+
+      {/* Public Routes */}
+
+      <Route
+        path="/courses"
+        element={<Courses />}
+      />
+
+      <Route
+        path="/courses/:courseId"
+        element={<CourseDetails />}
+      />
+
+      <Route
+        path="/login"
+        element={<Login />}
+      />
+
+      <Route
+        path="/register"
+        element={<Register />}
+      />
+
+
+      {/* Student Routes */}
 
       <Route
         path="/student/dashboard"
@@ -52,11 +85,23 @@ function App() {
       <Route
         path="/student/courses/:courseId/learn"
         element={
-         <ProtectedRoute allowedRole="STUDENT">
-           <Learning />
-         </ProtectedRoute>
+          <ProtectedRoute allowedRole="STUDENT">
+            <Learning />
+          </ProtectedRoute>
         }
       />
+
+      <Route
+        path="/student/courses/:courseId/assignments"
+        element={
+          <ProtectedRoute allowedRole="STUDENT">
+            <Assignments />
+          </ProtectedRoute>
+        }
+      />
+
+
+      {/* Instructor Routes */}
 
       <Route
         path="/instructor/dashboard"
@@ -113,21 +158,20 @@ function App() {
       />
 
       <Route
-       path="/instructor/courses/:courseId/lessons/:lessonId/edit"
-       element={
-        <ProtectedRoute allowedRole="INSTRUCTOR">
-          <EditLesson/>
-        </ProtectedRoute>
-       }
+        path="/instructor/courses/:courseId/lessons/:lessonId/edit"
+        element={
+          <ProtectedRoute allowedRole="INSTRUCTOR">
+            <EditLesson />
+          </ProtectedRoute>
+        }
       />
 
       <Route
         path="/instructor/courses/:courseId/lessons/:lessonId/materials/add"
         element={
           <ProtectedRoute allowedRole="INSTRUCTOR">
-            <AddMaterial/>
+            <AddMaterial />
           </ProtectedRoute>
-      
         }
       />
 
@@ -139,12 +183,13 @@ function App() {
           </ProtectedRoute>
         }
       />
+
       <Route
         path="/instructor/courses/:courseId/assignments/create"
         element={
-         <ProtectedRoute allowedRole="INSTRUCTOR">
-          <CreateAssignment />
-         </ProtectedRoute>
+          <ProtectedRoute allowedRole="INSTRUCTOR">
+            <CreateAssignment />
+          </ProtectedRoute>
         }
       />
 
@@ -152,10 +197,11 @@ function App() {
         path="/instructor/courses/:courseId/assignments/:assignmentId/edit"
         element={
           <ProtectedRoute allowedRole="INSTRUCTOR">
-            <EditAssignment/>
+            <EditAssignment />
           </ProtectedRoute>
         }
       />
+
       <Route
         path="/instructor/courses/:courseId/assignments/:assignmentId/submissions"
         element={
@@ -164,14 +210,18 @@ function App() {
           </ProtectedRoute>
         }
       />
+
       <Route
-        path="/student/courses/:courseId/assignments"
+        path="/instructor/courses/:courseId/progress"
         element={
-          <ProtectedRoute allowedRole="STUDENT">
-            <Assignments />
+          <ProtectedRoute allowedRole="INSTRUCTOR">
+            <InstructorProgress />
           </ProtectedRoute>
         }
       />
+
+
+      {/* Admin Routes */}
 
       <Route
         path="/admin/dashboard"
@@ -190,8 +240,10 @@ function App() {
           </ProtectedRoute>
         }
       />
+
     </Routes>
   );
 }
+
 
 export default App;

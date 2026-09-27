@@ -4,9 +4,23 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from accounts.permissions import IsInstructor, IsAdmin, IsStudent
-from .models import Course, CourseCategory, Enrollment, Lesson, StudyMaterial
-from .serializers import CourseSerializer, CourseCategorySerializer, EnrollmentSerializer, LessonSerializer, StudyMaterialSerializer, StudentLessonSerializer
-
+from .models import (
+    Course,
+    CourseCategory,
+    Enrollment,
+    Lesson,
+    StudyMaterial,
+    LessonProgress,
+)
+from .serializers import (
+    CourseSerializer,
+    CourseCategorySerializer,
+    EnrollmentSerializer,
+    LessonSerializer,
+    StudyMaterialSerializer,
+    StudentLessonSerializer,
+    LessonProgressSerializer,
+)
 
 class CourseViewSet(ModelViewSet):
     serializer_class = CourseSerializer
@@ -154,3 +168,65 @@ class StudentLessonViewSet(ReadOnlyModelViewSet):
             course__enrollments__student=self.request.user,
 
         ).distinct()
+
+
+class LessonProgressViewSet(ModelViewSet):
+    serializer_class = LessonProgressSerializer
+    permission_classes = [IsStudent]
+    http_method_names = ["get", "post", "delete", "head", "options"]
+
+    def get_queryset(self):
+        return LessonProgress.objects.filter(
+            student=self.request.user
+        )
+
+    def perform_create(self, serializer):
+        lesson = serializer.validated_data["lesson"]
+        student = self.request.user
+
+        if lesson.course.status != Course.Status.APPROVED:
+            raise ValidationError(
+                {
+                    "lesson": "You cannot complete a lesson from an unapproved course."
+                }
+            )
+
+        is_enrolled = Enrollment.objects.filter(
+            student=student,
+            course=lesson.course,
+        ).exists()
+
+        if not is_enrolled:
+            raise ValidationError(
+                {
+                    "lesson": "You are not enrolled in this course."
+                }
+            )
+
+        already_completed = LessonProgress.objects.filter(
+            student=student,
+            lesson=lesson,
+        ).exists()
+
+        if already_completed:
+            raise ValidationError(
+                {
+                    "lesson": "This lesson is already completed."
+                }
+            )
+
+        serializer.save(
+            student=student
+        )
+
+class InstructorProgressViewSet(ReadOnlyModelViewSet):
+    serializer_class = EnrollmentSerializer
+    permission_classes = [IsInstructor]
+
+    def get_queryset(self):
+        return Enrollment.objects.filter(
+            course__instructor=self.request.user
+        ).select_related(
+            "student",
+            "course",
+        )

@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getInstructorCourses, deleteCourse } from "../../services/courseService";
+
+import {
+  getInstructorCourses,
+  deleteCourse,
+} from "../../services/courseService";
 
 
 function InstructorCourses() {
@@ -23,6 +27,7 @@ function InstructorCourses() {
     loadCourses();
   }, []);
 
+
   const handleDelete = async (courseId) => {
     const confirmed = window.confirm(
       "Are you sure you want to delete this course?"
@@ -36,53 +41,94 @@ function InstructorCourses() {
       await deleteCourse(courseId);
 
       setCourses((currentCourses) =>
-        currentCourses.filter((course) => course.id !== courseId)
+        currentCourses.filter(
+          (course) => course.id !== courseId
+        )
       );
     } catch (error) {
       setError("Failed to delete course.");
     }
   };
 
+
   if (loading) {
     return <p>Loading courses...</p>;
   }
 
+
   if (error) {
     return <p>{error}</p>;
   }
+
 
   return (
     <div>
       <h1>My Courses</h1>
 
       {courses.length === 0 ? (
-        <p>You have not created any courses yet.</p>
+        <p>
+          You have not created any courses yet.
+        </p>
       ) : (
         <div>
           {courses.map((course) => (
             <div key={course.id}>
               <h2>{course.title}</h2>
 
-              <p>{course.description}</p>
+              <p>
+                {course.description}
+              </p>
 
-              <p>Category: {course.category_name}</p>
+              <p>
+                Category: {course.category_name}
+              </p>
 
-              <p>Level: {course.level}</p>
+              <p>
+                Level: {course.level}
+              </p>
 
-              <p>Status: {course.status}</p>
+              <p>
+                Status: {course.status}
+              </p>
 
-              <Link to={`/instructor/courses/${course.id}/edit`}>
-                Edit course
+
+              <Link
+                to={`/instructor/courses/${course.id}/edit`}
+              >
+                Edit Course
               </Link>
 
-              <Link to={`/instructor/courses/${course.id}/lessons`}>
+              {" | "}
+
+              <Link
+                to={`/instructor/courses/${course.id}/lessons`}
+              >
                 Manage Content
               </Link>
 
-              <Link to={`/instructor/courses/${course.id}/assignments`}>
+              {" | "}
+
+              <Link
+                to={`/instructor/courses/${course.id}/assignments`}
+              >
                 Manage Assignments
               </Link>
-              <button onClick={() => handleDelete(course.id)}>
+
+              {" | "}
+
+              <Link
+                to={`/instructor/courses/${course.id}/progress`}
+              >
+                View Student Progress
+              </Link>
+
+              {" | "}
+
+              <button
+                onClick={() =>
+                  handleDelete(course.id)
+                }
+              >
                 Delete Course
               </button>
             </div>
@@ -92,5 +138,6 @@ function InstructorCourses() {
     </div>
   );
 }
+
 
 export default InstructorCourses;

@@ -1,9 +1,21 @@
 from rest_framework.routers import DefaultRouter
 
-from .views import CourseViewSet, AdminCourseViewSet, PublicCourseViewSet, CourseCategoryViewSet, EnrollmentViewSet, LessonViewSet, StudyMaterialViewSet, StudentLessonViewSet
+from .views import (
+    CourseViewSet,
+    AdminCourseViewSet,
+    PublicCourseViewSet,
+    CourseCategoryViewSet,
+    EnrollmentViewSet,
+    LessonViewSet,
+    StudyMaterialViewSet,
+    StudentLessonViewSet,
+    LessonProgressViewSet,
+    InstructorProgressViewSet,
+)
 
 
 router = DefaultRouter()
+
 
 router.register(
     "courses",
@@ -46,10 +58,24 @@ router.register(
     StudyMaterialViewSet,
     basename="study-material",
 )
+
 router.register(
     "student/lessons",
     StudentLessonViewSet,
     basename="student-lesson",
 )
+
+router.register(
+    "lesson-progress",
+    LessonProgressViewSet,
+    basename="lesson-progress",
+)
+
+router.register(
+    "instructor/progress",
+    InstructorProgressViewSet,
+    basename="instructor-progress",
+)
+
 
 urlpatterns = router.urls

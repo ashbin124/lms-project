@@ -200,3 +200,35 @@ export const submitAssignment = async (
 
   return response.data;
 };
+
+export const getLessonProgress = async () => {
+  const response = await api.get(
+    "lesson-progress/"
+  );
+
+  return response.data;
+};
+
+export const markLessonComplete = async (lessonId) => {
+  const response = await api.post(
+    "lesson-progress/",
+    {
+      lesson: lessonId,
+    }
+  );
+
+  return response.data;
+};
+
+export const markLessonIncomplete = async (progressId) => {
+  await api.delete(
+    `lesson-progress/${progressId}/`
+  );
+};
+export const getInstructorProgress = async () => {
+  const response = await api.get(
+    "instructor/progress/"
+  );
+
+  return response.data;
+};
