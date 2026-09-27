@@ -16,6 +16,11 @@ import CreateLesson from "./pages/instructor/CreateLesson";
 import EditLesson from "./pages/instructor/EditLesson";
 import AddMaterial from "./pages/instructor/AddMaterial";
 import Learning from "./pages/student/Learning";
+import ManageAssignments from "./pages/instructor/ManageAssignments";
+import CreateAssignment from "./pages/instructor/CreateAssignment";
+import EditAssignment from "./pages/instructor/EditAssignment";
+import AssignmentSubmissions from "./pages/instructor/AssignmentSubmissions";
+import Assignments from "./pages/student/Assignments";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
@@ -123,6 +128,48 @@ function App() {
             <AddMaterial/>
           </ProtectedRoute>
       
+        }
+      />
+
+      <Route
+        path="/instructor/courses/:courseId/assignments"
+        element={
+          <ProtectedRoute allowedRole="INSTRUCTOR">
+            <ManageAssignments />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/instructor/courses/:courseId/assignments/create"
+        element={
+         <ProtectedRoute allowedRole="INSTRUCTOR">
+          <CreateAssignment />
+         </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/instructor/courses/:courseId/assignments/:assignmentId/edit"
+        element={
+          <ProtectedRoute allowedRole="INSTRUCTOR">
+            <EditAssignment/>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/instructor/courses/:courseId/assignments/:assignmentId/submissions"
+        element={
+          <ProtectedRoute allowedRole="INSTRUCTOR">
+            <AssignmentSubmissions />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/student/courses/:courseId/assignments"
+        element={
+          <ProtectedRoute allowedRole="STUDENT">
+            <Assignments />
+          </ProtectedRoute>
         }
       />
 

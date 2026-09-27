@@ -124,3 +124,79 @@ export const getStudentLessons = async () => {
   const response = await api.get("student/lessons/");
   return response.data;
 };
+
+export const getInstructorAssignments = async () => {
+  const response = await api.get("assignments/");
+  return response.data;
+};
+
+export const createAssignment = async (assignmentData) => {
+  const response = await api.post(
+    "assignments/",
+    assignmentData
+  );
+
+  return response.data;
+};
+
+export const updateAssignment = async (
+  assignmentId,
+  assignmentData
+) => {
+  const response = await api.patch(
+    `assignments/${assignmentId}/`,
+    assignmentData
+  );
+
+  return response.data;
+};
+
+export const deleteAssignment = async (assignmentId) => {
+  await api.delete(`assignments/${assignmentId}/`);
+};
+
+export const getInstructorSubmissions = async () => {
+  const response = await api.get(
+    "instructor/submissions/"
+  );
+
+  return response.data;
+};
+
+export const gradeSubmission = async (
+  submissionId,
+  gradingData
+) => {
+  const response = await api.patch(
+    `instructor/submissions/${submissionId}/grade/`,
+    gradingData
+  );
+
+  return response.data;
+};
+export const getStudentAssignments = async () => {
+  const response = await api.get(
+    "student/assignments/"
+  );
+
+  return response.data;
+};
+
+export const getMySubmissions = async () => {
+  const response = await api.get(
+    "submissions/"
+  );
+
+  return response.data;
+};
+
+export const submitAssignment = async (
+  submissionData
+) => {
+  const response = await api.post(
+    "submissions/",
+    submissionData
+  );
+
+  return response.data;
+};

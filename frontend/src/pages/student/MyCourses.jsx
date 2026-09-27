@@ -44,6 +44,12 @@ function MyCourses() {
             <Link to={`/student/courses/${enrollment.course}/learn`}>
               Start Learning
             </Link>
+
+            {" | "}
+
+            <Link to={`/student/courses/${enrollment.course}/assignments`}>
+              Assignments
+            </Link>
           </div>
         ))
       )}

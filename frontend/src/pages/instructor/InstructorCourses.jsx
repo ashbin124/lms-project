@@ -78,6 +78,10 @@ function InstructorCourses() {
               <Link to={`/instructor/courses/${course.id}/lessons`}>
                 Manage Content
               </Link>
+
+              <Link to={`/instructor/courses/${course.id}/assignments`}>
+                Manage Assignments
+              </Link>
               <button onClick={() => handleDelete(course.id)}>
                 Delete Course
               </button>
