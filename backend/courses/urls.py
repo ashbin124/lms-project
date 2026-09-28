@@ -11,6 +11,8 @@ from .views import (
     StudentLessonViewSet,
     LessonProgressViewSet,
     InstructorProgressViewSet,
+    LiveClassViewSet,
+    StudentLiveClassViewSet,
 )
 
 
@@ -76,6 +78,19 @@ router.register(
     InstructorProgressViewSet,
     basename="instructor-progress",
 )
+
+router.register(
+    "live-classes",
+    LiveClassViewSet,
+    basename="live-class"
+)
+
+router.register(
+    "student/live-classes",
+    StudentLiveClassViewSet,
+    basename="student-live-class",
+)
+
 
 
 urlpatterns = router.urls

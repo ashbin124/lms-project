@@ -7,6 +7,7 @@ from .models import (
     Lesson,
     StudyMaterial,
     LessonProgress,
+    LiveClass,
 )
 
 
@@ -294,3 +295,81 @@ class LessonProgressSerializer(serializers.ModelSerializer):
         read_only_fields = [
             "completed_at",
         ]
+
+
+class LiveClassSerializer(serializers.ModelSerializer):
+    course_title = serializers.CharField(
+        source="course.title",
+        read_only=True,
+    )
+
+    status = serializers.SerializerMethodField()
+
+    class Meta:
+        model = LiveClass
+        fields = [
+            "id",
+            "course",
+            "course_title",
+            "title",
+            "description",
+            "starts_at",
+            "ends_at",
+            "meeting_url",
+            "status",
+            "created_at",
+            "updated_at",
+        ]
+
+        read_only_fields = [
+            "created_at",
+            "updated_at",
+            "status",
+        ]
+
+    def validate(self, attrs):
+        starts_at = attrs.get(
+            "starts_at",
+            getattr(
+                self.instance,
+                "starts_at",
+                None,
+            ),
+        )
+
+        ends_at = attrs.get(
+            "ends_at",
+            getattr(
+                self.instance,
+                "ends_at",
+                None,
+            ),
+        )
+
+        if (
+            starts_at
+            and ends_at
+            and ends_at <= starts_at
+        ):
+            raise serializers.ValidationError(
+                {
+                    "ends_at": (
+                        "End time must be later than start time."
+                    )
+                }
+            )
+
+        return attrs
+
+    def get_status(self, obj):
+        from django.utils import timezone
+
+        now = timezone.now()
+
+        if now < obj.starts_at:
+            return "UPCOMING"
+
+        if obj.starts_at <= now <= obj.ends_at:
+            return "LIVE"
+
+        return "ENDED"

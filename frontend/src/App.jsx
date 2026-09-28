@@ -31,6 +31,10 @@ import AssignmentSubmissions from "./pages/instructor/AssignmentSubmissions";
 import Assignments from "./pages/student/Assignments";
 
 import InstructorProgress from "./pages/instructor/InstructorProgress";
+import ManageLiveClasses from "./pages/instructor/ManageLiveClasses";
+import CreateLiveClass from "./pages/instructor/CreateLiveClass";
+import EditLiveClass from "./pages/instructor/EditLiveClass";
+import LiveClasses from "./pages/student/LiveClasses";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -220,6 +224,41 @@ function App() {
         }
       />
 
+      <Route
+        path="/instructor/courses/:courseId/live-classes"
+        element={
+         <ProtectedRoute allowedRole="INSTRUCTOR">
+           <ManageLiveClasses />
+         </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/instructor/courses/:courseId/live-classes/create"
+        element={
+          <ProtectedRoute allowedRole="INSTRUCTOR">
+            <CreateLiveClass/>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/student/live-classes"
+        element={
+          <ProtectedRoute allowedRole="STUDENT">
+            <LiveClasses />
+          </ProtectedRoute>
+        }
+      />
+ 
+      <Route
+        path="/instructor/courses/:courseId/live-classes/:liveClassId/edit"
+        element={
+          <ProtectedRoute allowedRole="INSTRUCTOR">
+            <EditLiveClass />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Admin Routes */}
 

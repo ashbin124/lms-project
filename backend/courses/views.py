@@ -11,6 +11,7 @@ from .models import (
     Lesson,
     StudyMaterial,
     LessonProgress,
+    LiveClass
 )
 from .serializers import (
     CourseSerializer,
@@ -20,6 +21,7 @@ from .serializers import (
     StudyMaterialSerializer,
     StudentLessonSerializer,
     LessonProgressSerializer,
+    LiveClassSerializer
 )
 
 class CourseViewSet(ModelViewSet):
@@ -230,3 +232,55 @@ class InstructorProgressViewSet(ReadOnlyModelViewSet):
             "student",
             "course",
         )
+
+class LiveClassViewSet(ModelViewSet):
+    serializer_class = LiveClassSerializer
+    permission_classes = [IsInstructor]
+
+    def get_queryset(self):
+        return LiveClass.objects.filter(
+            course__instructor=self.request.user
+        )
+
+    def perform_create(self, serializer):
+        course = serializer.validated_data["course"]
+
+        if course.instructor != self.request.user:
+            raise ValidationError(
+                {
+                    "course": (
+                        "You can only create live classes"
+                        "for your own course."
+                    )
+                }
+            )
+        serializer.save()
+
+    def perform_update(self, serializer):
+        course = serializer.validated_data.get(
+            "course",
+            serializer.instance.course,
+        )
+
+        if course.instructor != self.request.user:
+            raise ValidationError(
+                {
+                    "course": (
+                        "You can only move live classes"
+                        "to your own courses"
+                    )
+                }
+            )
+        serializer.save()
+
+
+
+class StudentLiveClassViewSet(ReadOnlyModelViewSet):
+    serializer_class = LiveClassSerializer
+    permission_classes = [IsStudent]
+
+    def get_queryset(self):
+        return LiveClass.objects.filter(
+            course__status=Course.Status.APPROVED,
+            course__enrollments__student=self.request.user,
+        ).distinct()

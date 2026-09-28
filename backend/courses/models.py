@@ -170,3 +170,38 @@ class LessonProgress(models.Model):
 
     def __str__(self):
         return f"{self.student.email} - {self.lesson.title}"
+
+class LiveClass(models.Model):
+    course = models.ForeignKey(
+        Course,
+        on_delete=models.CASCADE,
+        related_name="live_classes",
+    )
+
+    title = models.CharField(
+        max_length=200,
+    )
+
+    description = models.TextField(
+        blank=True,
+    )
+
+    starts_at = models.DateTimeField()
+
+    ends_at = models.DateTimeField()
+
+    meeting_url = models.URLField()
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
+
+    class Meta:
+        ordering = ["starts_at"]
+
+    def __str__(self):
+        return f"{self.course.title} - {self.title}"

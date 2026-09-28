@@ -124,6 +124,14 @@ function InstructorCourses() {
 
               {" | "}
 
+              <Link
+                to={`/instructor/courses/${course.id}/live-classes`}
+              >
+                Manage Live classes
+              </Link>
+
+              {" | "}
+
               <button
                 onClick={() =>
                   handleDelete(course.id)

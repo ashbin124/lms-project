@@ -232,3 +232,50 @@ export const getInstructorProgress = async () => {
 
   return response.data;
 };
+
+export const getLiveClasses = async () => {
+  const response = await api.get(
+    "live-classes/"
+  );
+
+  return response.data;
+};
+
+
+export const createLiveClass = async (liveClassData) => {
+  const response = await api.post(
+    "live-classes/",
+    liveClassData
+  );
+
+  return response.data;
+};
+
+
+export const updateLiveClass = async (
+  liveClassId,
+  liveClassData
+) => {
+  const response = await api.patch(
+    `live-classes/${liveClassId}/`,
+    liveClassData
+  );
+
+  return response.data;
+};
+
+
+export const deleteLiveClass = async (liveClassId) => {
+  await api.delete(
+    `live-classes/${liveClassId}/`
+  );
+};
+
+
+export const getStudentLiveClasses = async () => {
+  const response = await api.get(
+    "student/live-classes/"
+  );
+
+  return response.data;
+};
