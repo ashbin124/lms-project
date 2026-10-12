@@ -107,6 +107,14 @@ function MyCourses() {
               >
                 Assignments
               </Link>
+
+              {" | "}
+
+              <Link
+               to={`/student/courses/${enrollment.course}/discussions`}
+              >
+                Discussions
+              </Link>
             </div>
           );
         })

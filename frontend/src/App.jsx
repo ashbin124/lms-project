@@ -35,6 +35,8 @@ import ManageLiveClasses from "./pages/instructor/ManageLiveClasses";
 import CreateLiveClass from "./pages/instructor/CreateLiveClass";
 import EditLiveClass from "./pages/instructor/EditLiveClass";
 import LiveClasses from "./pages/student/LiveClasses";
+import Discussions from "./pages/Discussions";
+import Notifications from "./pages/Notification";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -65,7 +67,34 @@ function App() {
         element={<Register />}
       />
 
+      {/* Notifications Routes */}
 
+      <Route
+        path="/student/notifications"
+        element={
+         <ProtectedRoute allowedRole="STUDENT">
+           <Notifications />
+         </ProtectedRoute>
+       }
+      />
+
+      <Route
+        path="/instructor/notifications"
+        element={
+         <ProtectedRoute allowedRole="INSTRUCTOR">
+           <Notifications />
+         </ProtectedRoute>
+       }
+      />
+
+      <Route
+       path="/admin/notifications"
+       element={
+        <ProtectedRoute allowedRole="ADMIN">
+          <Notifications />
+        </ProtectedRoute>
+       }
+      />
       {/* Student Routes */}
 
       <Route
@@ -100,6 +129,15 @@ function App() {
         element={
           <ProtectedRoute allowedRole="STUDENT">
             <Assignments />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/student/courses/:courseId/discussions"
+        element={
+          <ProtectedRoute allowedRole="STUDENT">
+            <Discussions />
           </ProtectedRoute>
         }
       />
@@ -256,6 +294,15 @@ function App() {
         element={
           <ProtectedRoute allowedRole="INSTRUCTOR">
             <EditLiveClass />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/instructor/courses/:courseId/discussions"
+        element={
+          <ProtectedRoute allowedRole="INSTRUCTOR">
+            <Discussions />
           </ProtectedRoute>
         }
       />

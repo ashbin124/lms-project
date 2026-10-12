@@ -25,6 +25,10 @@ class CourseSerializer(serializers.ModelSerializer):
         source="instructor.email",
         read_only=True,
     )
+    instructor_id = serializers.IntegerField(
+        source="instructor.id",
+        read_only=True,
+    )
 
     category_name = serializers.CharField(
         source="category.name",
@@ -40,6 +44,7 @@ class CourseSerializer(serializers.ModelSerializer):
             "category",
             "category_name",
             "instructor_name",
+            "instructor_id",
             "thumbnail",
             "level",
             "status",
