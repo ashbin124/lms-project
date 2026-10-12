@@ -57,6 +57,13 @@ useEffect(() => {
       >
         Live Classes
       </button>
+      <button
+  type="button"
+  onClick={() => navigate("/student/certificates")}
+  className="rounded-lg bg-blue-700 px-5 py-3 font-medium text-white hover:bg-blue-800"
+>
+  🎓 My Certificates
+</button>
 
       {" "}
 

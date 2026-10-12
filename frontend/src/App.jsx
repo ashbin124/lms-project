@@ -38,6 +38,8 @@ import LiveClasses from "./pages/student/LiveClasses";
 import Discussions from "./pages/Discussions";
 import Notifications from "./pages/Notification";
 
+import Certificates from "./pages/Certificates";
+
 import ProtectedRoute from "./components/ProtectedRoute";
 
 
@@ -76,6 +78,15 @@ function App() {
            <Notifications />
          </ProtectedRoute>
        }
+      />
+
+      <Route
+         path="/student/certificates"
+         element={
+           <ProtectedRoute allowedRoles="STUDENT">
+             <Certificates />
+           </ProtectedRoute>
+         }
       />
 
       <Route

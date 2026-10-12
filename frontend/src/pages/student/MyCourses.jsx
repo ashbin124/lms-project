@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
-import { getMyEnrollments } from "../../services/courseService";
 import { Link } from "react-router-dom";
+import { getMyEnrollments } from "../../services/courseService";
+import { issueCertificate } from "../../services/certificateService";
 
 function MyCourses() {
   const [enrollments, setEnrollments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const [issuingCourseId, setIssuingCourseId] = useState(null);
+  const [certificateResults, setCertificateResults] = useState({});
 
   useEffect(() => {
     const loadEnrollments = async () => {
@@ -21,6 +25,44 @@ function MyCourses() {
 
     loadEnrollments();
   }, []);
+
+  // Request certificate from Django API
+  const handleGetCertificate = async (courseId) => {
+    setIssuingCourseId(courseId);
+
+    setCertificateResults((previous) => ({
+      ...previous,
+      [courseId]: null,
+    }));
+
+    try {
+      const result = await issueCertificate(courseId);
+
+      setCertificateResults((previous) => ({
+        ...previous,
+        [courseId]: {
+          success: true,
+          message: result.created
+            ? "Certificate issued successfully!"
+            : "You already have a certificate for this course.",
+        },
+      }));
+    } catch (err) {
+      const message =
+        err.response?.data?.error ||
+        "Unable to issue certificate. Please try again.";
+
+      setCertificateResults((previous) => ({
+        ...previous,
+        [courseId]: {
+          success: false,
+          message,
+        },
+      }));
+    } finally {
+      setIssuingCourseId(null);
+    }
+  };
 
   if (loading) {
     return <p>Loading your courses...</p>;
@@ -39,6 +81,8 @@ function MyCourses() {
       ) : (
         enrollments.map((enrollment) => {
           const progress = enrollment.progress_percentage;
+          const courseId = enrollment.course;
+          const certificateResult = certificateResults[courseId];
 
           let learningButtonText = "Start Learning";
 
@@ -54,9 +98,7 @@ function MyCourses() {
             <div key={enrollment.id}>
               <h2>{enrollment.course_title}</h2>
 
-              <p>
-                Enrolled: {enrollment.enrolled_at}
-              </p>
+              <p>Enrolled: {enrollment.enrolled_at}</p>
 
               <h3>Progress</h3>
 
@@ -69,6 +111,7 @@ function MyCourses() {
                 <strong>{progress}%</strong>
               </p>
 
+              {/* Progress Bar */}
               <div
                 style={{
                   width: "100%",
@@ -89,32 +132,66 @@ function MyCourses() {
               </div>
 
               {progress === 100 && (
-                <p>✓ Course Completed</p>
+                <p>✓ All Lessons Completed</p>
               )}
 
               <br />
 
-              <Link
-                to={`/student/courses/${enrollment.course}/learn`}
-              >
+              {/* Course Navigation */}
+              <Link to={`/student/courses/${courseId}/learn`}>
                 {learningButtonText}
               </Link>
 
               {" | "}
 
-              <Link
-                to={`/student/courses/${enrollment.course}/assignments`}
-              >
+              <Link to={`/student/courses/${courseId}/assignments`}>
                 Assignments
               </Link>
 
               {" | "}
 
-              <Link
-               to={`/student/courses/${enrollment.course}/discussions`}
-              >
+              <Link to={`/student/courses/${courseId}/discussions`}>
                 Discussions
               </Link>
+
+              {/* Certificate Section */}
+              {progress === 100 && (
+                <div className="mt-4">
+                  {certificateResult?.success ? (
+                    <Link
+                      to="/student/certificates"
+                      className="inline-block rounded-lg bg-green-700 px-5 py-3 font-medium text-white hover:bg-green-800"
+                    >
+                      🎓 View Certificate
+                    </Link>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => handleGetCertificate(courseId)}
+                      disabled={issuingCourseId !== null}
+                      className="rounded-lg bg-blue-700 px-5 py-3 font-medium text-white hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {issuingCourseId === courseId
+                        ? "Checking eligibility..."
+                        : "🎓 Get Certificate"}
+                    </button>
+                  )}
+
+                  {/* Success / Error Message */}
+                  {certificateResult && (
+                    <p
+                      role="status"
+                      className={`mt-2 text-sm ${
+                        certificateResult.success
+                          ? "text-green-700"
+                          : "text-red-700"
+                      }`}
+                    >
+                      {certificateResult.message}
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
           );
         })

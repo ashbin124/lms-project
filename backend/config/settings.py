@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     "assignments",
     "discussions",
     "notifications",
+    "certificates",
+
 ]
 
 MIDDLEWARE = [
